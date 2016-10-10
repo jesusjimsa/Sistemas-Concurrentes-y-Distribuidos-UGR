@@ -1,11 +1,3 @@
-// *****************************************************************************
-//
-// Prácticas de SCD. Práctica 1.
-// Plantilla de código para el ejercicio del productor-consumidor con
-// buffer intermedio.
-//
-// *****************************************************************************
-
 #include <iostream>
 #include <cassert>
 #include <pthread.h>
@@ -19,8 +11,10 @@ using namespace std ;
 // ---------------------------------------------------------------------
 // constantes configurables:
 
-const unsigned num_items  = 40 ,    // numero total de items que se producen o consumen
+const unsigned num_items  = 60 ,    // numero total de items que se producen o consumen
 tam_vector = 10 ;    // tamaño del vector, debe ser menor que el número de items
+
+int buffer[num_items];
 
 // ---------------------------------------------------------------------
 // introduce un retraso aleatorio de duración comprendida entre
@@ -28,13 +22,18 @@ tam_vector = 10 ;    // tamaño del vector, debe ser menor que el número de ite
 
 void retraso_aleatorio( const float smin, const float smax ){
 	static bool primera = true ;
+	
 	if ( primera ){        // si es la primera vez:
 		srand(time(NULL)); //   inicializar la semilla del generador
 		primera = false ;  //   no repetir la inicialización
 	}
+	
 	// calcular un número de segundos aleatorio, entre {\ttbf smin} y {\ttbf smax}
+	
 	const float tsec = smin+(smax-smin)*((float)random()/(float)RAND_MAX);
+	
 	// dormir la hebra (los segundos se pasan a microsegundos, multiplicándos por 1 millón)
+	
 	usleep( (useconds_t) (tsec*1000000.0)  );
 }
 
@@ -45,7 +44,9 @@ unsigned producir_dato(){
 	static int contador = 0 ;
 	contador = contador + 1 ;
 	retraso_aleatorio( 0.1, 0.5 );
+	
 	cout << "Productor : dato producido: " << contador << endl << flush ;
+	
 	return contador ;
 }
 // ---------------------------------------------------------------------
@@ -53,7 +54,8 @@ unsigned producir_dato(){
 
 void consumir_dato( int dato ){
 	retraso_aleatorio( 0.1, 1.5 );
-	cout << "Consumidor:                              dato consumido: " << dato << endl << flush ;
+	
+	cout << "Consumidor:  dato consumido: " << dato << endl << flush ;
 }
 // ---------------------------------------------------------------------
 // función que ejecuta la hebra del productor
@@ -62,8 +64,7 @@ void * funcion_productor( void * ){
 	for( unsigned i = 0 ; i < num_items ; i++ ){
 		int dato = producir_dato() ;
 		
-		// falta aquí: insertar "dato" en el vector o buffer
-		// ................
+		buffer[i] = dato;	//Inserto el dato en el vector intermedio
 		
 		cout << "Productor : dato insertado: " << dato << endl << flush ;
 	}
@@ -76,9 +77,9 @@ void * funcion_consumidor( void * ){
 	for( unsigned i = 0 ; i < num_items ; i++ ){
 		int dato ;
 		
-		// falta aquí: leer "dato" desde el vector intermedio
-		// .................
-		cout << "Consumidor:                              dato extraído : " << dato << endl << flush ;
+		dato = buffer[i];	//Leo el dato desde el vector intermedio
+		
+		cout << "Consumidor:  dato extraído : " << dato << endl << flush ;
 		consumir_dato( dato ) ;
 	}
 	return NULL ;
