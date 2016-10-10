@@ -90,7 +90,7 @@ void * funcion_consumidor( void * ){
 		sem_wait(&consume);
 		sem_wait(&mutex);
 		
-		dato = buffer[libre];	//Leo el dato desde el vector intermedio
+		dato = buffer[libre - 1];	//Leo el dato desde el vector intermedio
 		libre--;
 		
 		sem_post(&produce);
