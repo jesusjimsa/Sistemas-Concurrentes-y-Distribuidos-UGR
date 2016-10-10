@@ -54,10 +54,10 @@ void fumar( int num_fumador ){
 }
 
 // ----------------------------------------------------------------------------
-//Función que simula al estanquero
+//Función que simula al estanco
 //Crea aleatoriamente los ingredientes
 
-void estanquero(){
+void estanco(){
 	srand(time(NULL));
 	Ingredientes creado;
 	
