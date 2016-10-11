@@ -92,6 +92,7 @@ int main(){
 	sem_init(estanquero, 0, 1);
 	
 	//Creación de hebras
+	//aquí
 	
 	
 	return 0 ;
