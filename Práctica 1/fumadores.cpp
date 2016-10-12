@@ -102,7 +102,7 @@ void estanco(){
 
 int main(){
 	srand( time(NULL) ); // inicializa semilla aleatoria para selección aleatoria de fumador
-	pthread_t fumador_1, fumador_2, fumador_3, estanquero;	//Declaración de las diferentes hebras
+	pthread_t fumador_1, fumador_2, fumador_3, estanquero_th;	//Declaración de las diferentes hebras
 	
 	//Inicialización de los semáforos
 	
@@ -116,7 +116,7 @@ int main(){
 	pthread_create(&fumador_1, NULL, fumar, 1);
 	pthread_create(&fumador_2, NULL, fumar, 2);
 	pthread_create(&fumador_3, NULL, fumar, 3);
-	pthread_create(&estanquero, NULL, estanco, NULL);
+	pthread_create(&estanquero_th, NULL, estanco, NULL);
 	
 	return 0 ;
 }
