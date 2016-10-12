@@ -92,7 +92,11 @@ int main(){
 	sem_init(estanquero, 0, 1);
 	
 	//Creación de hebras
-	//aquí
+	
+	pthread_create(&fumador_1, NULL, fumar, 1);
+	pthread_create(&fumador_2, NULL, fumar, 2);
+	pthread_create(&fumador_3, NULL, fumar, 3);
+	pthread_create(&estanquero, NULL, estanco, NULL);
 	
 	
 	return 0 ;
