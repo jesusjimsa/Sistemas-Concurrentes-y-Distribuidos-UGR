@@ -98,6 +98,5 @@ int main(){
 	pthread_create(&fumador_3, NULL, fumar, 3);
 	pthread_create(&estanquero, NULL, estanco, NULL);
 	
-	
 	return 0 ;
 }
