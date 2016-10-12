@@ -49,6 +49,20 @@ void fumar( int num_fumador ){
 		
 		cout << "Fumador número " << num_fumador << ": termina de fumar." << endl << flush ;
 		
+		cout << "Fumador número " << num_fumador << " está esperando: ";
+		
+		if (num_fumador == 1){
+			cout << "cerillas.\n";
+		}
+		else{
+			if(num_fumador == 2){
+				cout << "tabaco\n";
+			}
+			else{
+				cout << "papel\n";
+			}
+		}
+		
 		sem_post(&estanquero);
 	}
 }
@@ -67,14 +81,20 @@ void estanco(){
 		creado = Ingredientes::rand()%3;
 		
 		if (creado == Ingredientes::cerillas){
+			cout << "Se producen cerillas\n";
+			
 			sem_post(&fumador[1]);
 		}
 		
 		if (creado == Ingredientes::tabaco){
+			cout << "Se produce tabaco\n";
+			
 			sem_post(&fumador[2]);
 		}
 		
 		if(creado == Ingredientes::papel){
+			cout << "Se produce papel\n";
+			
 			sem_post(&fumador[3]);
 		}
 	}
