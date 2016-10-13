@@ -38,7 +38,7 @@ void retraso_aleatorio( const float smin, const float smax ){
 // recibe como parámetro el numero de fumador
 // el tiempo que tarda en fumar está entre dos y ocho décimas de segundo.
 
-void* fumar( int* num_fumador ){
+void* fumar( int num_fumador ){
 	
 	while(true){
 		sem_wait(&fumador[num_fumador]);
