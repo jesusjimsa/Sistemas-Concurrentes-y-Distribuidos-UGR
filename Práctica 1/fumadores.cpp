@@ -10,7 +10,7 @@ using namespace std ;
 
 sem_t estanquero, fumador[3];	//Declaracion de los semáforos
 
-enum class Ingredientes{tabaco, papel, cerillas};	//Declaración de los ingredientes con un enumerado
+int ingredientes;	//0 = cerillas, 1 = tabaco, 2 = papel
 
 // ---------------------------------------------------------------------
 // introduce un retraso aleatorio de duración comprendida entre
@@ -38,7 +38,7 @@ void retraso_aleatorio( const float smin, const float smax ){
 // recibe como parámetro el numero de fumador
 // el tiempo que tarda en fumar está entre dos y ocho décimas de segundo.
 
-void fumar( int num_fumador ){
+void* fumar( int* num_fumador ){
 	
 	while(true){
 		sem_wait(&fumador[num_fumador]);
@@ -71,28 +71,27 @@ void fumar( int num_fumador ){
 //Función que simula al estanco
 //Crea aleatoriamente los ingredientes
 
-void estanco(){
+void* estanco(){
 	srand(time(NULL));
-	Ingredientes creado;
 	
 	while (true){
 		sem_wait(estanquero);
 		
-		creado = Ingredientes::rand()%3;
+		ingredientes = rand()%3;
 		
-		if (creado == Ingredientes::cerillas){
+		if (ingredientes == 0){
 			cout << "Se producen cerillas\n";
 			
 			sem_post(&fumador[1]);
 		}
 		
-		if (creado == Ingredientes::tabaco){
+		if (ingredientes == 1){
 			cout << "Se produce tabaco\n";
 			
 			sem_post(&fumador[2]);
 		}
 		
-		if(creado == Ingredientes::papel){
+		if(ingredientes == 3){
 			cout << "Se produce papel\n";
 			
 			sem_post(&fumador[3]);
