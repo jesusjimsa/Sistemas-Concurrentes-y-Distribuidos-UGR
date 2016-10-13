@@ -38,7 +38,7 @@ void retraso_aleatorio( const float smin, const float smax ){
 // recibe como parámetro el numero de fumador
 // el tiempo que tarda en fumar está entre dos y ocho décimas de segundo.
 
-void* fumar( int num_fumador ){
+void* fumar( void num_fumador ){
 	
 	while(true){
 		sem_wait(&fumador[num_fumador]);
@@ -108,7 +108,7 @@ int main(){
 	for (int i = 0; i < 3; i++){
 		sem_init(&fumador[i], 0, 0);
 	}
-	sem_init(estanquero, 0, 1);
+	sem_init(&estanquero, 0, 1);
 	
 	//Creación de hebras
 	
