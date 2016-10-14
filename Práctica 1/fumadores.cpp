@@ -58,10 +58,10 @@ void* fumar( void * arg_ptr ){
 		}
 		else{
 			if(arg_ent == 1){
-				cout << "tabaco\n";
+				cout << "tabaco.\n";
 			}
 			else{
-				cout << "papel\n";
+				cout << "papel.\n";
 			}
 		}
 		
@@ -82,19 +82,19 @@ void* estanco(void* i){
 		ingredientes = rand()%3;
 		
 		if (ingredientes == 0){
-			cout << "Se producen cerillas\n";
+			cout << "Se producen cerillas.\n";
 			
 			sem_post(&fumadores[0]);
 		}
 		
 		if (ingredientes == 1){
-			cout << "Se produce tabaco\n";
+			cout << "Se produce tabaco.\n";
 			
 			sem_post(&fumadores[1]);
 		}
 		
 		if(ingredientes == 2){
-			cout << "Se produce papel\n";
+			cout << "Se produce papel.\n";
 			
 			sem_post(&fumadores[2]);
 		}
