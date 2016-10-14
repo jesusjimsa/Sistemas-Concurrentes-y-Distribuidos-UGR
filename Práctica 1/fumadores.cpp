@@ -8,7 +8,7 @@
 
 using namespace std ;
 
-sem_t estanquero, fumador[3];	//Declaracion de los semáforos
+sem_t estanquero, fumadores[3];	//Declaracion de los semáforos
 
 int ingredientes;	//0 = cerillas, 1 = tabaco, 2 = papel
 
@@ -38,24 +38,26 @@ void retraso_aleatorio( const float smin, const float smax ){
 // recibe como parámetro el numero de fumador
 // el tiempo que tarda en fumar está entre dos y ocho décimas de segundo.
 
-void* fumar( void num_fumador ){
+void* fumar( void * arg_ptr ){
+	
+	unsigned long arg_ent = (unsigned long) arg_ptr;	//Convertir puntero a entero
 	
 	while(true){
-		sem_wait(&fumador[num_fumador]);
+		sem_wait(&fumadores[arg_ent]);
 		
-		cout << "Fumador número " << num_fumador << ": comienza a fumar." << endl << flush ;
+		cout << "Fumador número " << arg_ent << ": comienza a fumar." << endl << flush ;
 		
 		retraso_aleatorio( 0.2, 0.8 );
 		
-		cout << "Fumador número " << num_fumador << ": termina de fumar." << endl << flush ;
+		cout << "Fumador número " << arg_ent << ": termina de fumar." << endl << flush ;
 		
-		cout << "Fumador número " << num_fumador << " está esperando: ";
+		cout << "Fumador número " << arg_ent << " está esperando: ";
 		
-		if (num_fumador == 1){
+		if (arg_ent == 0){
 			cout << "cerillas.\n";
 		}
 		else{
-			if(num_fumador == 2){
+			if(arg_ent == 1){
 				cout << "tabaco\n";
 			}
 			else{
@@ -71,51 +73,57 @@ void* fumar( void num_fumador ){
 //Función que simula al estanco
 //Crea aleatoriamente los ingredientes
 
-void* estanco(){
+void* estanco(void* i){
 	srand(time(NULL));
 	
 	while (true){
-		sem_wait(estanquero);
+		sem_wait(&estanquero);
 		
 		ingredientes = rand()%3;
 		
 		if (ingredientes == 0){
 			cout << "Se producen cerillas\n";
 			
-			sem_post(&fumador[1]);
+			sem_post(&fumadores[0]);
 		}
 		
 		if (ingredientes == 1){
 			cout << "Se produce tabaco\n";
 			
-			sem_post(&fumador[2]);
+			sem_post(&fumadores[1]);
 		}
 		
-		if(ingredientes == 3){
+		if(ingredientes == 2){
 			cout << "Se produce papel\n";
 			
-			sem_post(&fumador[3]);
+			sem_post(&fumadores[2]);
 		}
 	}
 }
 
 int main(){
 	srand( time(NULL) ); // inicializa semilla aleatoria para selección aleatoria de fumador
-	pthread_t fumador_1, fumador_2, fumador_3, estanquero_th;	//Declaración de las diferentes hebras
+	pthread_t fumador[3], estanquero_th;	//Declaración de las diferentes hebras
 	
 	//Inicialización de los semáforos
 	
 	for (int i = 0; i < 3; i++){
-		sem_init(&fumador[i], 0, 0);
+		sem_init(&fumadores[i], 0, 0);
 	}
 	sem_init(&estanquero, 0, 1);
 	
 	//Creación de hebras
 	
-	pthread_create(&fumador_1, NULL, fumar, 1);
-	pthread_create(&fumador_2, NULL, fumar, 2);
-	pthread_create(&fumador_3, NULL, fumar, 3);
+	for (int i = 0; i < 3; i++){
+		void * arg_ptr = (void *) i;	//Convertir entero a puntero
+		pthread_create(&fumador[i], NULL, fumar, arg_ptr);
+	}
 	pthread_create(&estanquero_th, NULL, estanco, NULL);
+	
+	for (int i = 0; i < 3; i++){
+		pthread_join(fumador[i], NULL);
+	}
+	pthread_join(estanquero_th, NULL);
 	
 	return 0 ;
 }
