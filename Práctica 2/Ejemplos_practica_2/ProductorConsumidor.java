@@ -103,7 +103,7 @@ class Consumidor implements Runnable
 
 // ****************************************************************************
 
-class MainProductorConsumidor
+class ProductorConsumidor
 {
   public static void main( String[] args )
   {
