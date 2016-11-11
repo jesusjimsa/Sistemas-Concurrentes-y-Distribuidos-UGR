@@ -1,30 +1,41 @@
-// ****************************************************************************
+import monitor.*;
 
-class Buffer{
-	private int numSlots = 0,
-				cont = 0;
+class Buffer extends AbstractMonitor{
+	private int numSlots = 0, cont = 0;
 	private double[] buffer = null ;
+	
+	Condition produciendo = makeCondition();
+	Condition consumiendo = makeCondition();
 	
 	public Buffer( int p_numSlots ){
 		numSlots = p_numSlots ;
 		buffer = new double[numSlots] ;
 	}
 	
-	public synchronized void depositar( double valor ) throws InterruptedException{
-		while( cont == numSlots )
-			wait();
-		buffer[cont] = valor ;
-		cont++ ;
-		notifyAll() ;
+	public void depositar( double valor ) throws InterruptedException{
+		enter();
+		
+		if( cont == numSlots )
+			consumiendo.await();
+		buffer[cont] = valor;
+		cont++;
+		consumiendo.signal();
+		
+		leave();
 	}
 	
-	public synchronized double extraer() throws InterruptedException{
+	public double extraer() throws InterruptedException{
+		enter();
+		
 		double valor ;
-		while( cont == 0 )
-			wait() ;
+		if( cont == 0 )
+			produciendo.await() ;
 		cont--;
 		valor = buffer[cont] ;
-		notifyAll();
+		produciendo.signal();
+		
+		leave();
+		
 		return valor;
 	}
 }
@@ -33,9 +44,8 @@ class Buffer{
 
 class Productor implements Runnable{
 	private Buffer bb;
-	private int veces,
-				numP;
-	public  Thread thr   ;
+	private int veces, numP;
+	public  Thread thr;
 	
 	public Productor( Buffer pbb, int pveces, int pnumP ){
 		bb    = pbb;
@@ -63,8 +73,7 @@ class Productor implements Runnable{
 
 class Consumidor implements Runnable{
 	private Buffer  bb;
-	private int veces,
-				numC;
+	private int veces, numC;
 	public  Thread  thr;
 	
 	public Consumidor( Buffer pbb, int pveces, int pnumC ){
@@ -118,6 +127,7 @@ class ProductorConsumidor{
 		// poner en marcha las hebras
 		for(int i = 0; i < prod.length; i++)
 			prod[i].thr.start();
+		
 		for(int i = 0; i < cons.length; i++)
 			cons[i].thr.start();
 	}

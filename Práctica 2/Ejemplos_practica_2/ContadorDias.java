@@ -53,7 +53,7 @@ class Usuario implements Runnable
 
 // ****************************************************************************
 
-class MainContadorDias
+class ContadorDias
 { 
   public static void main( String[] args ) 
   { 
