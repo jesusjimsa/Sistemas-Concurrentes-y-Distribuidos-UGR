@@ -8,6 +8,7 @@ class Estanco extends AbstractMonitor{
     private Condition producir = makeCondition();
     private Condition fumadores[] = new Condition[3];
 
+    //Constructor del monitor
     public Estanco(){
         ingrediente_producido = -1;
         puede_consumir = false;
