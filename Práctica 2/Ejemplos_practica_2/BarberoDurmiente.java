@@ -115,10 +115,10 @@ class MainBarberia{
 	public static void main(String[] args){
 		Barberia barberia = new Barberia();
 		Barbero barbero = new Barbero(barberia);
-		Clientes clientes[] = new Clientes[8];
+		Cliente clientes[] = new Cliente[8];
 
 		for(int i = 0; i < 8; i++){
-			clientes[i] = new Clientes(barberia, i);
+			clientes[i] = new Cliente(barberia, i);
 		}
 
 		barbero.thr.start();
