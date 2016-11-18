@@ -22,7 +22,7 @@ class Estanco extends AbstractMonitor{
     public void obtenerIngrediente(int miIngrediente){
         enter();
 
-        if(miIngrediente == ingrediente_producido){
+        if(miIngrediente != ingrediente_producido){
             fumadores[miIngrediente].await();
         }
 
