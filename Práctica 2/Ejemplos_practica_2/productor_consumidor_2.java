@@ -17,9 +17,11 @@ class Buffer extends AbstractMonitor{
 		
 		if( cont == numSlots )
 			consumiendo.await();
+		
 		buffer[cont] = valor;
 		cont++;
-		consumiendo.signal();
+		
+		produciendo.signal();
 		
 		leave();
 	}
@@ -28,11 +30,14 @@ class Buffer extends AbstractMonitor{
 		enter();
 		
 		double valor ;
+		
 		if( cont == 0 )
 			produciendo.await() ;
+		
 		cont--;
 		valor = buffer[cont] ;
-		produciendo.signal();
+		
+		consumiendo.signal();
 		
 		leave();
 		
