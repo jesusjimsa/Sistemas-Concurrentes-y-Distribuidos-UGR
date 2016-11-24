@@ -13,7 +13,7 @@ class Barberia extends AbstractMonitor{
 		esperando = 0;		//Al principio no hay clientes esperando
 	}
 
-	//Invcado por los clientes para cortarse el pelo
+	//Invocado por los clientes para cortarse el pelo
 	public void cortarPelo(int num_cliente){
 		enter();
 
