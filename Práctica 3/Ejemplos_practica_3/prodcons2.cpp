@@ -28,6 +28,8 @@ void productor(int rank){
 
 		// enviar 'value'
 		MPI_Ssend(&value, 1, MPI_INT, Buffer, Productor, MPI_COMM_WORLD);
+
+		cerr << "Bien producido" << endl;
 	}
 }
 
@@ -73,6 +75,7 @@ void buffer(){
 
 				break;
 		}
+		cerr << "Sale del switch case" << endl;
 	}
 }
 
@@ -95,7 +98,9 @@ void consumidor(int rank){
 		// (entre una décima de segundo y un segundo)
 		usleep(1000U * (100U + (rand() % 900U)));
 
-		raiz = sqrt(value) ;
+		raiz = sqrt(value);
+
+		cerr << "Bien consumido" << endl;
 	}
 }
 
