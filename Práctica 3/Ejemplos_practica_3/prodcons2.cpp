@@ -5,9 +5,8 @@
 #include <unistd.h>    // incluye "usleep"
 #include <stdlib.h>    // incluye "rand" y "srand"
 
-
-#define Productor 0
-#define Buffer 1
+#define Productor 1
+#define Buffer 5
 #define Consumidor 2
 #define ITERS 20
 #define TAM 5
@@ -16,21 +15,22 @@ using namespace std;
 
 // ---------------------------------------------------------------------
 
-void productor(){
+void productor(int rank){
 	int value;
 
 	for(unsigned int i = 0; i < ITERS; i++){
 		value = i;
-		cout << "Productor produce valor " << value << endl << flush ;
+		cout << "Productor " << rank << " produce valor " << value << endl << flush ;
 
 		// espera bloqueado durante un intervalo de tiempo aleatorio
 		// (entre una décima de segundo y un segundo)
 		usleep(1000U * (100U + (rand() % 900U)));
 
 		// enviar 'value'
-		MPI_Ssend(&value, 1, MPI_INT, Buffer, 0, MPI_COMM_WORLD);
+		MPI_Ssend(&value, 1, MPI_INT, Buffer, Productor, MPI_COMM_WORLD);
 	}
 }
+
 // ---------------------------------------------------------------------
 
 void buffer(){
@@ -41,7 +41,7 @@ void buffer(){
 
 	for(unsigned int i = 0; i < ITERS * 2; i++ ){
 		if(pos == 0)		// el consumidor no puede consumir
-			rama = 0 ;
+			rama = 0;
 		else if(pos == TAM)	// el productor no puede producir
 			rama = 1 ;
 		else{				// ambas guardas son ciertas
@@ -58,17 +58,17 @@ void buffer(){
 
 		switch(rama){
 			case 0:
-				MPI_Recv( &value[pos], 1, MPI_INT, Productor, 0, MPI_COMM_WORLD, &status );
+				MPI_Recv(&value[pos], 1, MPI_INT, MPI_ANY_SOURCE, Productor, MPI_COMM_WORLD, &status);
 
-				cout << "Buffer recibe " << value[pos] << " de Productor " << endl << flush;
+				cout << "Buffer recibe " << value[pos] << " de Productor " << status.MPI_SOURCE << endl << flush;
 				pos++;
 
 				break;
 			case 1:
-				MPI_Recv(&peticion, 1, MPI_INT, Consumidor, 0, MPI_COMM_WORLD, &status);
-				MPI_Ssend(&value[pos-1], 1, MPI_INT, Consumidor, 0, MPI_COMM_WORLD);
+				MPI_Recv(&peticion, 1, MPI_INT, MPI_ANY_SOURCE, Consumidor, MPI_COMM_WORLD, &status);
+				MPI_Ssend(&value[pos-1], 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD);
 
-				cout << "Buffer envía " << value[pos-1] << " a Consumidor " << endl << flush;
+				cout << "Buffer envía " << value[pos-1] << " a Consumidor " << status.MPI_SOURCE << endl << flush;
 				pos--;
 
 				break;
@@ -78,7 +78,7 @@ void buffer(){
 
 // ---------------------------------------------------------------------
 
-void consumidor(){
+void consumidor(int rank){
 	int value, peticion;
 	float raiz ;
 	MPI_Status status ;
@@ -86,9 +86,10 @@ void consumidor(){
 	peticion = 1
 	
 	for (unsigned int i = 0; i < ITERS; i++){
-		MPI_Ssend(&peticion, 1, MPI_INT, Buffer, 0, MPI_COMM_WORLD);
-		MPI_Recv(&value, 1,MPI_INT, Buffer, 0, MPI_COMM_WORLD,&status);
-		cout << "Consumidor recibe valor " << value << " de Buffer " << endl << flush ;
+		MPI_Ssend(&peticion, 1, MPI_INT, Buffer, Consumidor, MPI_COMM_WORLD);
+		MPI_Recv(&value, 1, MPI_INT, Buffer, Productor, MPI_COMM_WORLD,&status);
+		
+		cout << "Consumidor recibe " << rank << " valor " << value << " de Buffer " << endl << flush ;
 
 		// espera bloqueado durante un intervalo de tiempo aleatorio
 		// (entre una décima de segundo y un segundo)
@@ -97,6 +98,7 @@ void consumidor(){
 		raiz = sqrt(value) ;
 	}
 }
+
 // ---------------------------------------------------------------------
 
 int main(int argc, char *argv[]){
@@ -112,22 +114,22 @@ int main(int argc, char *argv[]){
 
 	// comprobar el número de procesos con el que el programa
 	// ha sido puesto en marcha (debe ser 3)
-	if(size != 3) {
-		cout << "El numero de procesos debe ser 3 " << endl;
+	if(size != 10) {
+		cout << "El numero de procesos debe ser 10 " << endl;
 		return 0;
 	}
 
 	// verificar el identificador de proceso (rank), y ejecutar la
 	// operación apropiada a dicho identificador
-	if(rank == Productor)
-		productor();
+	if(rank < buffer)
+		productor(rank);
 	else if (rank == Buffer)
 		buffer();
 	else
-		consumidor();
+		consumidor(rank);
 
 	// al terminar el proceso, finalizar MPI
-	MPI_Finalize( );
+	MPI_Finalize();
 
 	return 0;
 }
