@@ -37,7 +37,7 @@ void buffer(){
 	int value[TAM], peticion, pos, rama;
 	MPI_Status status ;
 
-	pos = 0
+	pos = 0;
 
 	for(unsigned int i = 0; i < ITERS * 2; i++ ){
 		if(pos == 0)		// el consumidor no puede consumir
@@ -83,7 +83,7 @@ void consumidor(int rank){
 	float raiz ;
 	MPI_Status status ;
 
-	peticion = 1
+	peticion = 1;
 	
 	for (unsigned int i = 0; i < ITERS; i++){
 		MPI_Ssend(&peticion, 1, MPI_INT, Buffer, Consumidor, MPI_COMM_WORLD);
@@ -121,7 +121,7 @@ int main(int argc, char *argv[]){
 
 	// verificar el identificador de proceso (rank), y ejecutar la
 	// operación apropiada a dicho identificador
-	if(rank < buffer)
+	if(rank < Buffer)
 		productor(rank);
 	else if (rank == Buffer)
 		buffer();
