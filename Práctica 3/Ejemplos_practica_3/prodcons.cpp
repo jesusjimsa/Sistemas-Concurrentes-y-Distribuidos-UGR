@@ -7,10 +7,10 @@
 
 // ---------------------------------------------------------------------
 
-#define Productor     0
-#define Buffer        1
-#define Consumidor    2
-#define ITERS        20
+#define Productor	0
+#define Buffer		1
+#define Consumidor	2
+#define ITERS		20	//Iteraciones
 
 using namespace std;
 
@@ -22,10 +22,10 @@ void productor(){
 	  
 		// espera bloqueado durante un intervalo de tiempo aleatorio 
 		// (entre una décima de segundo y un segundo)
-		usleep( 1000U * (100U+(rand()%900U)) ); 
+		usleep( 1000U * (100U + (rand() % 900U)) ); 
 	  
 		// enviar valor
-		MPI_Ssend( &i, 1, MPI_INT, Buffer, 0, MPI_COMM_WORLD );
+		MPI_Ssend(&i, 1, MPI_INT, Buffer, 0, MPI_COMM_WORLD);
 	}
 }
 // ---------------------------------------------------------------------
@@ -50,7 +50,7 @@ void consumidor(){
 	float raiz ;
 	MPI_Status status ;
    
-	for (unsigned int i=0;i<ITERS;i++){
+	for (unsigned int i = 0; i < ITERS; i++){
 		MPI_Ssend(&peticion, 1, MPI_INT, Buffer, 0, MPI_COMM_WORLD); 
 		MPI_Recv(&value, 1, MPI_INT, Buffer, 0, MPI_COMM_WORLD,&status );
 	  
@@ -58,10 +58,10 @@ void consumidor(){
 	  
 		// espera bloqueado durante un intervalo de tiempo aleatorio 
 		// (entre una décima de segundo y un segundo)
-		usleep( 1000U * (100U+(rand()%900U)) ); 
+		usleep( 1000U * (100U + (rand() % 900U)) ); 
 
 		// calcular raíz del valor recibido
-		raiz = sqrt( value );
+		raiz = sqrt(value);
 	}
 }
 // ---------------------------------------------------------------------
@@ -71,31 +71,34 @@ int main(int argc, char *argv[]){
 	int size;	// numero de procesos
 	  
 	// inicializar MPI y leer identificador de proceso y número de procesos
-	MPI_Init( &argc, &argv );
-	MPI_Comm_rank( MPI_COMM_WORLD, &rank );
-	MPI_Comm_size( MPI_COMM_WORLD, &size );
+	MPI_Init(&argc, &argv);
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	MPI_Comm_size(MPI_COMM_WORLD, &size);
 
 	// inicializa la semilla aleatoria:
-	srand ( time(NULL) );
+	srand(time(NULL));
 
 	// comprobar el número de procesos con el que el programa 
-	// ha sido puesto en marcha (debe ser 3)
-	if (size != 3){  
-		cout << "El numero de procesos debe ser 3, pero es " << size << "." << endl << flush ;
+	// ha sido puesto en marcha (debe ser 10)
+	if (size != 10){  
+		cout << "El numero de procesos debe ser 10, pero es " << size << "." << endl << flush ;
 		return 0;
 	} 
    
 	// verificar el identificador de proceso (rank), y ejecutar la
 	// operación apropiada a dicho identificador
-	if ( rank == Productor ) 
-		productor();
-	else if (rank == Buffer) 
-		buffer();
-	else 
-		consumidor();
-   
+
+	for(int i = 0; i < 5; i++){
+		if (rank == Productor)
+			productor();
+		else if(rank == Buffer)
+			buffer();
+		else
+			consumidor();
+	}
+	
 	// al terminar el proceso, finalizar MPI
-	MPI_Finalize( );
+	MPI_Finalize();
 
 	return 0;
 }
