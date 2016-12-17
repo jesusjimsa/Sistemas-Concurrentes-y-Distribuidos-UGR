@@ -90,7 +90,7 @@ void consumidor(int rank){
 	
 	for (unsigned int i = 0; i < ITERS; i++){
 		MPI_Ssend(&peticion, 1, MPI_INT, Buffer, Consumidor, MPI_COMM_WORLD);
-		MPI_Recv(&value, 1, MPI_INT, Buffer, Productor, MPI_COMM_WORLD,&status);
+		MPI_Recv(&value, 1, MPI_INT, Buffer, 0, MPI_COMM_WORLD,&status);
 		
 		cout << "Consumidor recibe " << rank << " valor " << value << " de Buffer " << endl << flush ;
 
