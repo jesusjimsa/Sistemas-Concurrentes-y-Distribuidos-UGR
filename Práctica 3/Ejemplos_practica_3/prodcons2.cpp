@@ -28,8 +28,6 @@ void productor(int rank){
 
 		// enviar 'value'
 		MPI_Ssend(&value, 1, MPI_INT, Buffer, Productor, MPI_COMM_WORLD);
-
-		cerr << "Bien producido" << endl;
 	}
 }
 
@@ -75,7 +73,6 @@ void buffer(){
 
 				break;
 		}
-		cerr << "Sale del switch case" << endl;
 	}
 }
 
@@ -87,7 +84,7 @@ void consumidor(int rank){
 	MPI_Status status ;
 
 	peticion = 1;
-	
+
 	for (unsigned int i = 0; i < ITERS; i++){
 		MPI_Ssend(&peticion, 1, MPI_INT, Buffer, Consumidor, MPI_COMM_WORLD);
 		MPI_Recv(&value, 1, MPI_INT, Buffer, 0, MPI_COMM_WORLD,&status);
@@ -99,8 +96,6 @@ void consumidor(int rank){
 		usleep(1000U * (100U + (rand() % 900U)));
 
 		raiz = sqrt(value);
-
-		cerr << "Bien consumido" << endl;
 	}
 }
 
@@ -113,7 +108,7 @@ int main(int argc, char *argv[]){
 	MPI_Init(&argc, &argv);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
-
+	
 	// inicializa la semilla aleatoria:
 	srand(time(NULL));
 
