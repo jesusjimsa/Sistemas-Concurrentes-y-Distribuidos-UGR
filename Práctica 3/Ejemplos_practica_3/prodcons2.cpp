@@ -15,10 +15,10 @@ using namespace std;
 
 // ---------------------------------------------------------------------
 
-void productor(int rank){
+void producir(int rank){
 	int value;
 
-	for(unsigned int i = 0; i < ITERS; i++){
+	for(unsigned int i = 0; i < ITERS/5; i++){
 		value = i;
 		cout << "Productor " << rank << " produce valor " << value << endl << flush ;
 
@@ -40,20 +40,26 @@ void buffer(){
 	pos = 0;
 
 	for(unsigned int i = 0; i < ITERS * 2; i++ ){
-		if(pos == 0)		// el consumidor no puede consumir
+		if(pos == 0){			// el consumidor no puede consumir
 			rama = 0;
-		else if(pos == TAM)	// el productor no puede producir
-			rama = 1 ;
-		else{				// ambas guardas son ciertas
-
-		// leer 'status' del siguiente mensaje (esperando si no hay)
-			MPI_Probe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
-
-	   // calcular la rama en función del origen del mensaje
-			if(status.MPI_SOURCE == Productor)
-				rama = 0 ;
-			else
+			MPI_Probe(MPI_ANY_SOURCE, Productor, MPI_COMM_WORLD, &status);
+		}
+		else{
+			if(pos == TAM){	// el productor no puede producir
 				rama = 1 ;
+				MPI_Probe(MPI_ANY_SOURCE, Consumidor, MPI_COMM_WORLD, &status);
+			}
+			else{				// ambas guardas son ciertas
+
+				// leer 'status' del siguiente mensaje (esperando si no hay)
+				MPI_Probe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
+
+				// calcular la rama en función del origen del mensaje
+				if(status.MPI_SOURCE == Productor)
+					rama = 0 ;
+				else
+					rama = 1 ;
+			}
 		}
 
 		switch(rama){
@@ -78,18 +84,18 @@ void buffer(){
 
 // ---------------------------------------------------------------------
 
-void consumidor(int rank){
+void consumir(int rank){
 	int value, peticion;
 	float raiz ;
 	MPI_Status status ;
 
 	peticion = 1;
 
-	for (unsigned int i = 0; i < ITERS; i++){
+	for (unsigned int i = 0; i < ITERS/4; i++){
 		MPI_Ssend(&peticion, 1, MPI_INT, Buffer, Consumidor, MPI_COMM_WORLD);
 		MPI_Recv(&value, 1, MPI_INT, Buffer, 0, MPI_COMM_WORLD,&status);
 		
-		cout << "Consumidor recibe " << rank << " valor " << value << " de Buffer " << endl << flush ;
+		cout << "Consumidor " << rank << " recibe valor " << value << " de Buffer " << endl << flush ;
 
 		// espera bloqueado durante un intervalo de tiempo aleatorio
 		// (entre una décima de segundo y un segundo)
@@ -122,11 +128,11 @@ int main(int argc, char *argv[]){
 	// verificar el identificador de proceso (rank), y ejecutar la
 	// operación apropiada a dicho identificador
 	if(rank < Buffer)
-		productor(rank);
+		producir(rank);
 	else if (rank == Buffer)
 		buffer();
 	else
-		consumidor(rank);
+		consumir(rank);
 
 	// al terminar el proceso, finalizar MPI
 	MPI_Finalize();
