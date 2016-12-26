@@ -73,6 +73,7 @@ void Filosofo(int id, int nprocesos){
 			MPI_Ssend(NULL, 0, MPI_INT, der, COGER, MPI_COMM_WORLD);
 		}
 
+		//Empieza a comer
 		cout << "Filosofo " << id << " COMIENDO" << endl << flush;
 		sleep((rand() % 3) + 1);  //comiendo
 
