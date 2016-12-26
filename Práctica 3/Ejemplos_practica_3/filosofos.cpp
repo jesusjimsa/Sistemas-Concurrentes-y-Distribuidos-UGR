@@ -55,20 +55,20 @@ void Filosofo(int id, int nprocesos){
 	while(true){
 		//El primer filósofo empieza al revés para no generar interbloqueo
 		if(id == 0){
-			// Solicita tenedor derecho
+			//Solicita tenedor derecho
 			cout << "Filosofo " << id << " solicita tenedor der..." << der << endl << flush;
 			MPI_Ssend(NULL, 0, MPI_INT, der, COGER, MPI_COMM_WORLD);
 
-			// Solicita tenedor izquierdo
+			//Solicita tenedor izquierdo
 			cout << "Filosofo " << id << " solicita tenedor izq..." << izq << endl << flush;
 			MPI_Ssend(NULL, 0, MPI_INT, izq, COGER, MPI_COMM_WORLD);
 		}
 		else{
-			// Solicita tenedor izquierdo
+			//Solicita tenedor izquierdo
 			cout << "Filosofo " << id << " solicita tenedor izq..." << izq << endl << flush;
 			MPI_Ssend(NULL, 0, MPI_INT, izq, COGER, MPI_COMM_WORLD);
 
-			// Solicita tenedor derecho
+			//Solicita tenedor derecho
 			cout << "Filosofo " << id << " solicita tenedor der..." << der << endl << flush;
 			MPI_Ssend(NULL, 0, MPI_INT, der, COGER, MPI_COMM_WORLD);
 		}
@@ -77,19 +77,19 @@ void Filosofo(int id, int nprocesos){
 		cout << "Filosofo " << id << " COMIENDO" << endl << flush;
 		sleep((rand() % 3) + 1);  //comiendo
 
-		// Suelta el tenedor izquierdo
+		//Suelta el tenedor izquierdo
 		cout << "Filosofo " << id << " suelta tenedor izq..." << izq << endl << flush;
 		MPI_Ssend(NULL, 0, MPI_INT, izq, SOLTAR, MPI_COMM_WORLD);
 
-		// Suelta el tenedor derecho
+		//Suelta el tenedor derecho
 		cout << "Filosofo " << id << " suelta tenedor der..." << der << endl << flush;
 		MPI_Ssend(NULL, 0, MPI_INT, der, SOLTAR, MPI_COMM_WORLD);
 
-		// Piensa (espera bloqueada aleatorio del proceso)
+		//Piensa (espera bloqueada aleatorio del proceso)
 		cout << "Filosofo " << id << " PENSANDO" << endl << flush;
 
-		// espera bloqueado durante un intervalo de tiempo aleatorio
-		// (entre una décima de segundo y un segundo)
+		//espera bloqueado durante un intervalo de tiempo aleatorio
+		//(entre una décima de segundo y un segundo)
 		usleep(1000U * (100U + (rand() % 900U)));
 	}
 }
