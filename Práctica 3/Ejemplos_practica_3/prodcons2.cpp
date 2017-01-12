@@ -72,9 +72,9 @@ void buffer(){
 				break;
 			case 1:
 				MPI_Recv(&peticion, 1, MPI_INT, MPI_ANY_SOURCE, Consumidor, MPI_COMM_WORLD, &status);
-				MPI_Ssend(&value[pos-1], 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD);
+				MPI_Ssend(&value[pos - 1], 1, MPI_INT, status.MPI_SOURCE, 0, MPI_COMM_WORLD);
 
-				cout << "Buffer envía " << value[pos-1] << " a Consumidor " << status.MPI_SOURCE << endl << flush;
+				cout << "Buffer envía " << value[pos - 1] << " a Consumidor " << status.MPI_SOURCE << endl << flush;
 				pos--;
 
 				break;
@@ -86,8 +86,8 @@ void buffer(){
 
 void consumir(int rank){
 	int value, peticion;
-	float raiz ;
-	MPI_Status status ;
+	float raiz;
+	MPI_Status status;
 
 	peticion = 1;
 
@@ -108,7 +108,7 @@ void consumir(int rank){
 // ---------------------------------------------------------------------
 
 int main(int argc, char *argv[]){
-	int rank,size;
+	int rank, size;
 
 	// inicializar MPI, leer identif. de proceso y número de procesos
 	MPI_Init(&argc, &argv);
@@ -119,7 +119,7 @@ int main(int argc, char *argv[]){
 	srand(time(NULL));
 
 	// comprobar el número de procesos con el que el programa
-	// ha sido puesto en marcha (debe ser 3)
+	// ha sido puesto en marcha (debe ser 10)
 	if(size != 10) {
 		cout << "El numero de procesos debe ser 10 " << endl;
 		return 0;
