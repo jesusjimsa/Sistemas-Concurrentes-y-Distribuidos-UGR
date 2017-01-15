@@ -1,2 +1,2 @@
 No te fíes mucho, el ejercicio 2 no llegó a compilar.  
-Esperando nota...
+Nota obtenida: 4,5 (casi)
