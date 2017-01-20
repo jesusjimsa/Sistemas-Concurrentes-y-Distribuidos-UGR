@@ -100,6 +100,7 @@ int main(int argc, char **argv){
 		// suspender hasta nueva activacion utiiizando retardos absolutos  (--- usar clock_nanosleep ---)
 		// y definir la activacion del siguiente ciclo
 		clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &activacionTiempo, NULL);
+		activacionTiempo = sumaTiempos(&activacionTiempo, &cicloMarco);
 		}
 	/////////////////////////////////////////////////////////////////////////////////
 
@@ -132,8 +133,8 @@ void TareaA(void){
 	printf("Tarea A: activacion = %d, tiempo activacion = %.6f seg\n", i,getSeconds(&tInicio));
 
 	//COMPLETAR: Simula el consumo con otro retardo absoluto o relativo  (--- usar clock_nanosleep ---)
-	tActivacion = sumaTiempos(&tInicio, &tComputo);
-	clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &tActivacion);
+	tActivacion = sumaTiempos(&tiempo, &tComputo);
+	clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &tActivacion, NULL);
 
 	//Marca el tiempo de fin
 	clock_gettime(CLOCK_REALTIME, &tiempo);
@@ -171,8 +172,8 @@ void TareaB(void){
 		i,getSeconds(&tInicio));
 
 	//COMPLETAR: Simula el consumo con otro retardo absoluto o relativo
-	tActivacion = sumaTiempos(&tInicio, &tComputo);
-	clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &tActivacion);
+	tActivacion = sumaTiempos(&tiempo, &tComputo);
+	clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &tActivacion, NULL);
 
 	//Marca el tiempo de fin
 	clock_gettime(CLOCK_REALTIME, &tiempo);
@@ -209,8 +210,8 @@ void TareaC(void){
 	printf("Tarea C: activacion = %d, tiempo activacion = %.6f seg\n", i,getSeconds(&tInicio));
 
 	//COMPLETAR: Simula el consumo con otro retardo absoluto o relativo
-	tActivacion = sumaTiempos(&tInicio, &tComputo);
-	clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &tActivacion);
+	tActivacion = sumaTiempos(&tiempo, &tComputo);
+	clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &tActivacion, NULL);
 
 	//Marca el tiempo de fin
 	clock_gettime(CLOCK_REALTIME, &tiempo);
@@ -247,8 +248,8 @@ void TareaD(void){
 	printf("Tarea D: activacion = %d, tiempo activacion = %.6f seg\n", i,getSeconds(&tInicio));
 
 	//COMPLETAR: Simula el consumo con otro retardo absoluto o relativo
-	tActivacion = sumaTiempos(&tInicio, &tComputo);
-	clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &tActivacion);
+	tActivacion = sumaTiempos(&tiempo, &tComputo);
+	clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &tActivacion, NULL);
 
 	//Marca el tiempo de fin
 	clock_gettime(CLOCK_REALTIME, &tiempo);
