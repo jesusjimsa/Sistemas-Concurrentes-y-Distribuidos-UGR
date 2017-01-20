@@ -11,8 +11,6 @@
 *
 * 	compilacion: gcc ejecutivociclico.c utilRT.c -o ejecutivo
 *
-*   Nota: En linux es necesario enlazar la libreria POSIX al final añadiendo -lrt
-*
 *******************************************************************************/
 
 
