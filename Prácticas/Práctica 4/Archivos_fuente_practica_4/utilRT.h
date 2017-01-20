@@ -16,7 +16,7 @@
 #ifndef UTILRT_H_
 #define UTILRT_H_
 
-#include <time.h>			
+#include <time.h>
 
 //Define las constantes de tiempo
 #define NANO_PER_SECOND		1000000000L
@@ -42,7 +42,6 @@ double getMillis(struct timespec *t1);
 
 // Funcion getMillis: Obtiene timespec a partir de segundos
 struct timespec getTimespec(double seconds);
-
 
 
 #endif //UTIRT_H_

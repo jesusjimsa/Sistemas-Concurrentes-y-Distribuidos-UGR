@@ -25,8 +25,7 @@
 
 
 //Inicio del programa principal
-int main(int argc,char *argv[])
-{
+int main(int argc,char *argv[]){
 	//Almacena marcas de tiempo
 	struct timespec times0,times1;
 
@@ -39,9 +38,9 @@ int main(int argc,char *argv[])
 
 	//Obtiene la resolucion del reloj POSIX por defecto
 	if ( clock_getres(CLOCK_MONOTONIC, &clock_res) == -1 ) {
-	      perror( "clock get resolution" );
-	      return -1;
-    	}
+		perror( "clock get resolution" );
+		return -1;
+	}
 
 	//Mide el tiempo de una seccion de codigo
 	clock_gettime(CLOCK_MONOTONIC, &times0); //marcamos tiempo inicial
@@ -55,8 +54,7 @@ int main(int argc,char *argv[])
 	total = getMillis(&timeInterval);
 
 	//Se muestran los resultados
-    	printf( "\n\t\tResultados \n\t\t----------\n");
+	printf( "\n\t\tResultados \n\t\t----------\n");
 	printf( "Resolucion del reloj CLOCK_MONOTONIC: %ld segundos y %ld nanosegundos\n",clock_res.tv_sec,clock_res.tv_nsec);
-    	printf( "Tiempo total en ejecutar %s: %.6f  (ms)\n", argv[1],total);
-
+	printf( "Tiempo total en ejecutar %s: %.6f  (ms)\n", argv[1],total);
 }

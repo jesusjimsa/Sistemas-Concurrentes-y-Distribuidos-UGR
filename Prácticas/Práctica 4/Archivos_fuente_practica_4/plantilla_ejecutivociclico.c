@@ -11,7 +11,7 @@
 *
 * 	compilacion: gcc ejecutivociclico.c utilRT.c -o ejecutivo
 *
-*   Nota: En linux es necesario enlazar la libreria POSIX al final a�adiendo -lrt
+*   Nota: En linux es necesario enlazar la libreria POSIX al final añadiendo -lrt
 *
 *******************************************************************************/
 
@@ -41,8 +41,7 @@ void TareaD(void);
 //
 // Programa principal
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv){
 	//Parametros relacionados con el ejecutivo ciclico
 	struct timespec activacionTiempo;  //define el nuevo instante de activacion
 	struct timespec cicloMarco;  //define el intervalo de tiempo
@@ -50,6 +49,7 @@ int main(int argc, char **argv)
 	//Parametros relacionados con el ejecutivo ciclico
 	int nciclos; //Numero de ciclos secundarios respecto al marco primario ---Modificar----
 	int marco;   //especifica el ciclo secundario actual
+
 	marco = 0;   //se inicializa el marco, que varia entre 0 y nCiclos-1
 
 
@@ -92,8 +92,7 @@ int main(int argc, char **argv)
 //
 // TareaA
 
-void TareaA(void)
-{
+void TareaA(void){
 	// Variables de tiempo
 	struct timespec
 		tInicio,     // tiempo de inicio de esta ejecución de la tarea (relativo a 'origenTiempo')
@@ -103,24 +102,22 @@ void TareaA(void)
 		tComputo,    // duración del intervalo en el que se duerme la hebra, simulando hacer algún trabajo útil.
 		             //    (se debe de construir usando el valor de C expresado en segundos)
 		tiempo;      // variable temporal usada en los cálculos
-	static int
-	  i = 0 ;      // número de la activación actual de la tarea
+	
+	static int i = 0 ;      // número de la activación actual de la tarea
 
 	//COMPLETAR: Establece el tiempo de computo tComputo (--- usar getTimespec ---)
 
 	//Marca el tiempo de inicio
 	clock_gettime(CLOCK_REALTIME,&tiempo);
 	tInicio = restaTiempos(&tiempo,&origenTiempo);
-	printf("Tarea A: activacion = %d, tiempo activacion = %.6f seg\n",
-		i,getSeconds(&tInicio));
+	printf("Tarea A: activacion = %d, tiempo activacion = %.6f seg\n", i,getSeconds(&tInicio));
 
 	//COMPLETAR: Simula el consumo con otro retardo absoluto o relativo  (--- usar clock_nanosleep ---)
 
 	//Marca el tiempo de fin
 	clock_gettime(CLOCK_REALTIME,&tiempo);
 	tFinal = restaTiempos(&tiempo,&origenTiempo);
-	printf("Tarea A: activacion = %d, tiempo finalizacion = %.6f seg\n",
-		i,getSeconds(&tFinal));
+	printf("Tarea A: activacion = %d, tiempo finalizacion = %.6f seg\n", i,getSeconds(&tFinal));
 
 	// incrementa contador de activaciones
 	i++;
@@ -130,8 +127,7 @@ void TareaA(void)
 //
 // TareaB
 
-void TareaB(void)
-{
+void TareaB(void){
 	// Variables de tiempo
 	struct timespec
 		tInicio,     // tiempo de inicio de esta ejecución de la tarea (relativo a 'origenTiempo')
@@ -141,8 +137,8 @@ void TareaB(void)
 		tComputo,    // duración del intervalo en el que se duerme la hebra, simulando hacer algún trabajo útil.
 								 //    (se debe de construir usando el valor de C expresado en segundos)
 		tiempo;      // variable temporal usada en los cálculos
-	static int
-		i = 0 ;      // número de la activación actual de la tarea
+	
+	static int i = 0 ;      // número de la activación actual de la tarea
 
 	//COMPLETAR: Establece el tiempo de computo tComputo
 
@@ -157,8 +153,7 @@ void TareaB(void)
 	//Marca el tiempo de fin
 	clock_gettime(CLOCK_REALTIME,&tiempo);
 	tFinal = restaTiempos(&tiempo,&origenTiempo);
-	printf("Tarea B: activacion = %d, tiempo finalizacion = %.6f seg\n",
-		i,getSeconds(&tFinal));
+	printf("Tarea B: activacion = %d, tiempo finalizacion = %.6f seg\n", i,getSeconds(&tFinal));
 
 	// incrementa contador de activaciones
 	i++;
@@ -168,8 +163,7 @@ void TareaB(void)
 //
 // TareaC
 
-void TareaC(void)
-{
+void TareaC(void){
 	// Variables de tiempo
 	struct timespec
 		tInicio,     // tiempo de inicio de esta ejecución de la tarea (relativo a 'origenTiempo')
@@ -179,24 +173,22 @@ void TareaC(void)
 		tComputo,    // duración del intervalo en el que se duerme la hebra, simulando hacer algún trabajo útil.
 								 //    (se debe de construir usando el valor de C expresado en segundos)
 		tiempo;      // variable temporal usada en los cálculos
-	static int
-		i = 0 ;      // número de la activación actual de la tarea
+	
+	static int i = 0 ;      // número de la activación actual de la tarea
 
 	//COMPLETAR: Establece el tiempo de computo tComputo
 
 	//Marca el tiempo de inicio
 	clock_gettime(CLOCK_REALTIME,&tiempo);
 	tInicio = restaTiempos(&tiempo,&origenTiempo);
-	printf("Tarea C: activacion = %d, tiempo activacion = %.6f seg\n",
-		i,getSeconds(&tInicio));
+	printf("Tarea C: activacion = %d, tiempo activacion = %.6f seg\n", i,getSeconds(&tInicio));
 
 	//COMPLETAR: Simula el consumo con otro retardo absoluto o relativo
 
 	//Marca el tiempo de fin
 	clock_gettime(CLOCK_REALTIME,&tiempo);
 	tFinal = restaTiempos(&tiempo,&origenTiempo);
-	printf("Tarea C: activacion = %d, tiempo finalizacion = %.6f seg\n",
-		i,getSeconds(&tFinal));
+	printf("Tarea C: activacion = %d, tiempo finalizacion = %.6f seg\n", i,getSeconds(&tFinal));
 
 	// incrementa contador de activaciones
 	i++;
@@ -206,8 +198,7 @@ void TareaC(void)
 //
 // TareaD
 
-void TareaD(void)
-{
+void TareaD(void){
 	// Variables de tiempo
 	struct timespec
 		tInicio,     // tiempo de inicio de esta ejecución de la tarea (relativo a 'origenTiempo')
@@ -217,24 +208,22 @@ void TareaD(void)
 		tComputo,    // duración del intervalo en el que se duerme la hebra, simulando hacer algún trabajo útil.
 								 //    (se debe de construir usando el valor de C expresado en segundos)
 		tiempo;      // variable temporal usada en los cálculos
-	static int
-		i = 0 ;      // número de la activación actual de la tarea
+	
+	static int i = 0 ;      // número de la activación actual de la tarea
 
 	//COMPLETAR: Establece el tiempo de computo tComputo
 
 	//Marca el tiempo de inicio
 	clock_gettime(CLOCK_REALTIME,&tiempo);
 	tInicio = restaTiempos(&tiempo,&origenTiempo);
-	printf("Tarea D: activacion = %d, tiempo activacion = %.6f seg\n",
-		i,getSeconds(&tInicio));
+	printf("Tarea D: activacion = %d, tiempo activacion = %.6f seg\n", i,getSeconds(&tInicio));
 
 	//COMPLETAR: Simula el consumo con otro retardo absoluto o relativo
 
 	//Marca el tiempo de fin
 	clock_gettime(CLOCK_REALTIME,&tiempo);
 	tFinal = restaTiempos(&tiempo,&origenTiempo);
-	printf("Tarea D: activacion = %d, tiempo finalizacion = %.6f seg\n",
-		i,getSeconds(&tFinal));
+	printf("Tarea D: activacion = %d, tiempo finalizacion = %.6f seg\n", i,getSeconds(&tFinal));
 
 	// incrementa contador de activaciones
 	i++;

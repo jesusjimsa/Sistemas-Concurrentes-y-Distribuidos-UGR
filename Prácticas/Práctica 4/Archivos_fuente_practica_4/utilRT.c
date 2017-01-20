@@ -24,17 +24,18 @@
 // Param2: (IN) Instante de tiempo t2
 // Return: timespec diferencia
 ////////////////////////////////////////////////////////////////////////
-struct timespec restaTiempos(struct timespec *t1, struct timespec *t2)
-{
-      struct timespec tres;
+struct timespec restaTiempos(struct timespec *t1, struct timespec *t2){
+	struct timespec tres;
 
-      tres.tv_sec = t1->tv_sec - t2->tv_sec;
-      tres.tv_nsec = t1->tv_nsec - t2->tv_nsec;
-      if (tres.tv_nsec<0){
-        tres.tv_nsec=NANO_PER_SECOND + t1->tv_nsec - t2->tv_nsec;
-        tres.tv_sec--;
-      }
-      return tres;
+	tres.tv_sec = t1->tv_sec - t2->tv_sec;
+	tres.tv_nsec = t1->tv_nsec - t2->tv_nsec;
+
+	if (tres.tv_nsec<0){
+		tres.tv_nsec=NANO_PER_SECOND + t1->tv_nsec - t2->tv_nsec;
+		tres.tv_sec--;
+	}
+	
+	return tres;
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -43,17 +44,18 @@ struct timespec restaTiempos(struct timespec *t1, struct timespec *t2)
 // Param2: (IN) Instante de tiempo t2
 // Return: timespec suma
 ////////////////////////////////////////////////////////////////////////
-struct timespec sumaTiempos(struct timespec *t1, struct timespec *t2)
-{
-      struct timespec tres;
+struct timespec sumaTiempos(struct timespec *t1, struct timespec *t2){
+	struct timespec tres;
 
-      tres.tv_sec = t1->tv_sec + t2->tv_sec;
-      tres.tv_nsec = t1->tv_nsec + t2->tv_nsec;
-      if (tres.tv_nsec>=NANO_PER_SECOND){
-		  tres.tv_nsec -= NANO_PER_SECOND;
-        tres.tv_sec++;
-      }
-      return tres;
+	tres.tv_sec = t1->tv_sec + t2->tv_sec;
+	tres.tv_nsec = t1->tv_nsec + t2->tv_nsec;
+
+	if (tres.tv_nsec>=NANO_PER_SECOND){
+		tres.tv_nsec -= NANO_PER_SECOND;
+		tres.tv_sec++;
+	}
+	
+	return tres;
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -61,11 +63,12 @@ struct timespec sumaTiempos(struct timespec *t1, struct timespec *t2)
 // Param1: (IN) Tiempo en timespec
 // Return: Segundos asociados al intervalo de tiempo
 ////////////////////////////////////////////////////////////////////////
-double getSeconds(struct timespec *t1)
-{
+double getSeconds(struct timespec *t1){
 	double delta;
+
 	delta = (double) t1->tv_sec ;
 	delta += (double) t1->tv_nsec *(double) SECOND_PER_NANO;
+	
 	return delta;
 }
 
@@ -74,11 +77,12 @@ double getSeconds(struct timespec *t1)
 // Param1: (IN) Tiempo en timespec
 // Return: Millisegundos asociados al intervalo de tiempo
 ////////////////////////////////////////////////////////////////////////
-double getMillis(struct timespec *t1)
-{
+double getMillis(struct timespec *t1){
 	double delta;
+	
 	delta = (double) t1->tv_sec * (double) MILI_PER_SECOND;
 	delta += (double) t1->tv_nsec *(double) MILI_PER_NANO;
+	
 	return delta;
 }
 
@@ -88,12 +92,12 @@ double getMillis(struct timespec *t1)
 // Param1: (IN) Tiempo en segundo
 // Return: timespec
 ////////////////////////////////////////////////////////////////////////
-struct timespec getTimespec(double seconds)
-{
+struct timespec getTimespec(double seconds){
 	struct timespec time;
 
 	time.tv_sec = (int) seconds;
 	time.tv_nsec = (int) ((seconds - time.tv_sec) * NANO_PER_SECOND);
+	
 	return time;
 }
 
