@@ -43,5 +43,4 @@ double getMillis(struct timespec *t1);
 // Funcion getMillis: Obtiene timespec a partir de segundos
 struct timespec getTimespec(double seconds);
 
-
 #endif //UTIRT_H_

@@ -19,6 +19,7 @@
 #include <errno.h>		//para perror
 #include "utilRT.h"
 
+#define CICLO_SECUNDARIO 5
 
 // Se define una variable global que marca la referencia de tiempo:
 // es el instante de tiempo absoluto (tiempo desde 1 de enero de 1970)
@@ -58,29 +59,48 @@ int main(int argc, char **argv){
 	//
 	/////////////////////////////////////////////////////////////////////////////////
 
-
 	//COMPLETAR: Establecer el Ciclo Secundario (--- usar getTimespec ---)
+	cicloMarco = getTimespec(CICLO_SECUNDARIO);
 
 	//COMPLETAR: Calcula la marca de tiempo para determinar el instante de referencia
+	clock_gettime(CLOCK_REALTIME, &origenTiempo);
 
-        //COMPLETAR: A partir de este instante, determina la siguiente activacion del ejecutivo ciclico ( --- usar sumaTiempos ---)
+    //COMPLETAR: A partir de este instante, determina la siguiente activacion del ejecutivo ciclico ( --- usar sumaTiempos ---)
+	activacionTiempo = sumaTiempos(&origenTiempo, &cicloMarco);
 
 	/////////////////////////////////////////////////////////////////////////////////
 	//Etapa 2: Implementacion del ejecutivo ciclico
-	/////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////
 	// Aqui esta el planificador ciclico
-	// while (1) {
-	//     switch(marco)
-	//     {
-	//	       case 1: Tarea 2(); Tarea 3(); . . . break;
-	//	       case 2: Tarea 1(); Tarea 2(); . . . break;
-	//			.....
-	//     }
-	//     marco = (marco +1)% nciclos;
-	//
-	//     suspender hasta nueva activacion utiiizando retardos absolutos  (--- usar clock_nanosleep ---)
-	//     y definir la activacion del siguiente ciclo
-	// }
+		while (1) {
+			switch(marco){
+				case 0:
+					TareaA();
+					TareaB();
+					TareaC();
+					break;
+				case 1:
+					TareaB();
+					TareaA();
+					TareaD();
+					break;
+				case 2:
+					TareaC();
+					TareaA();
+					TareaB();
+					break;
+				case 3:
+					TareaA();
+					TareaB();
+					break;
+			}
+
+			marco = (marco + 1) % nciclos;
+
+		// suspender hasta nueva activacion utiiizando retardos absolutos  (--- usar clock_nanosleep ---)
+		// y definir la activacion del siguiente ciclo
+		clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &activacionTiempo, NULL);
+		}
 	/////////////////////////////////////////////////////////////////////////////////
 
   return 0;
@@ -104,17 +124,20 @@ void TareaA(void){
 	static int i = 0 ;      // número de la activación actual de la tarea
 
 	//COMPLETAR: Establece el tiempo de computo tComputo (--- usar getTimespec ---)
+	tComputo = getTimespec(1);
 
 	//Marca el tiempo de inicio
-	clock_gettime(CLOCK_REALTIME,&tiempo);
-	tInicio = restaTiempos(&tiempo,&origenTiempo);
+	clock_gettime(CLOCK_REALTIME, &tiempo);
+	tInicio = restaTiempos(&tiempo, &origenTiempo);
 	printf("Tarea A: activacion = %d, tiempo activacion = %.6f seg\n", i,getSeconds(&tInicio));
 
 	//COMPLETAR: Simula el consumo con otro retardo absoluto o relativo  (--- usar clock_nanosleep ---)
+	tActivacion = sumaTiempos(&tInicio, &tComputo);
+	clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &tActivacion);
 
 	//Marca el tiempo de fin
-	clock_gettime(CLOCK_REALTIME,&tiempo);
-	tFinal = restaTiempos(&tiempo,&origenTiempo);
+	clock_gettime(CLOCK_REALTIME, &tiempo);
+	tFinal = restaTiempos(&tiempo, &origenTiempo);
 	printf("Tarea A: activacion = %d, tiempo finalizacion = %.6f seg\n", i,getSeconds(&tFinal));
 
 	// incrementa contador de activaciones
@@ -139,18 +162,21 @@ void TareaB(void){
 	static int i = 0 ;      // número de la activación actual de la tarea
 
 	//COMPLETAR: Establece el tiempo de computo tComputo
+	tComputo = getTimespec(1.5);
 
 	//Marca el tiempo de inicio
-	clock_gettime(CLOCK_REALTIME,&tiempo);
-	tInicio = restaTiempos(&tiempo,&origenTiempo);
+	clock_gettime(CLOCK_REALTIME, &tiempo);
+	tInicio = restaTiempos(&tiempo, &origenTiempo);
 	printf("Tarea B: activacion = %d, tiempo activacion = %.6f seg\n",
 		i,getSeconds(&tInicio));
 
 	//COMPLETAR: Simula el consumo con otro retardo absoluto o relativo
+	tActivacion = sumaTiempos(&tInicio, &tComputo);
+	clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &tActivacion);
 
 	//Marca el tiempo de fin
-	clock_gettime(CLOCK_REALTIME,&tiempo);
-	tFinal = restaTiempos(&tiempo,&origenTiempo);
+	clock_gettime(CLOCK_REALTIME, &tiempo);
+	tFinal = restaTiempos(&tiempo, &origenTiempo);
 	printf("Tarea B: activacion = %d, tiempo finalizacion = %.6f seg\n", i,getSeconds(&tFinal));
 
 	// incrementa contador de activaciones
@@ -175,17 +201,20 @@ void TareaC(void){
 	static int i = 0 ;      // número de la activación actual de la tarea
 
 	//COMPLETAR: Establece el tiempo de computo tComputo
+	tComputo = getTimespec(2);
 
 	//Marca el tiempo de inicio
-	clock_gettime(CLOCK_REALTIME,&tiempo);
-	tInicio = restaTiempos(&tiempo,&origenTiempo);
+	clock_gettime(CLOCK_REALTIME, &tiempo);
+	tInicio = restaTiempos(&tiempo, &origenTiempo);
 	printf("Tarea C: activacion = %d, tiempo activacion = %.6f seg\n", i,getSeconds(&tInicio));
 
 	//COMPLETAR: Simula el consumo con otro retardo absoluto o relativo
+	tActivacion = sumaTiempos(&tInicio, &tComputo);
+	clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &tActivacion);
 
 	//Marca el tiempo de fin
-	clock_gettime(CLOCK_REALTIME,&tiempo);
-	tFinal = restaTiempos(&tiempo,&origenTiempo);
+	clock_gettime(CLOCK_REALTIME, &tiempo);
+	tFinal = restaTiempos(&tiempo, &origenTiempo);
 	printf("Tarea C: activacion = %d, tiempo finalizacion = %.6f seg\n", i,getSeconds(&tFinal));
 
 	// incrementa contador de activaciones
@@ -210,17 +239,20 @@ void TareaD(void){
 	static int i = 0 ;      // número de la activación actual de la tarea
 
 	//COMPLETAR: Establece el tiempo de computo tComputo
+	tComputo = getTimespec(2.4);
 
 	//Marca el tiempo de inicio
-	clock_gettime(CLOCK_REALTIME,&tiempo);
-	tInicio = restaTiempos(&tiempo,&origenTiempo);
+	clock_gettime(CLOCK_REALTIME, &tiempo);
+	tInicio = restaTiempos(&tiempo, &origenTiempo);
 	printf("Tarea D: activacion = %d, tiempo activacion = %.6f seg\n", i,getSeconds(&tInicio));
 
 	//COMPLETAR: Simula el consumo con otro retardo absoluto o relativo
+	tActivacion = sumaTiempos(&tInicio, &tComputo);
+	clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &tActivacion);
 
 	//Marca el tiempo de fin
-	clock_gettime(CLOCK_REALTIME,&tiempo);
-	tFinal = restaTiempos(&tiempo,&origenTiempo);
+	clock_gettime(CLOCK_REALTIME, &tiempo);
+	tFinal = restaTiempos(&tiempo, &origenTiempo);
 	printf("Tarea D: activacion = %d, tiempo finalizacion = %.6f seg\n", i,getSeconds(&tFinal));
 
 	// incrementa contador de activaciones
